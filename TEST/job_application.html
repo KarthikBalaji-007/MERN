@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Job Application Form</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body{
+                font-family: Georgia, 'Times New Roman', Times, serif;
+                max-width: fit-content;
+                margin: 50px auto;
+                padding: 20px;
+            }
+
+            .error{
+                color:crimson;
+                font-size:14px;
+                display: none;
+            }
+
+            .error.show {
+                display: block;
+            }
+
+            input, select, textarea {
+                width: 100%;
+                padding: 8px;
+                margin: 5px 0 10px 0;
+                box-sizing: border-box;
+            }
+
+            button {
+                padding: 10px 20px;
+                margin: 10px 5px 0 0;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Job Application Form</h1>
+        <form>
+            <label for="name">Full Name: </label><br>
+            <input type="text" id="name" name="name" required><br>
+            <span class="error" id="nameError">Please enter your full name (minimum 3 characters)</span><br>
+
+            <label for="email">Email Address: </label><br>
+            <input type="email" id="email" name="email" required><br>
+            <span class="error" id="emailError">Please enter a valid email address</span><br>
+
+            <label for="phone">Phone Number: </label><br>
+            <input type="tel" id="phone" name="phone" required><br>
+            <span class="error" id="phoneError">Please enter a valid phone number</span><br>
+
+            <label for="position">Position Applied For: </label><br>
+            <select id="position" name="position" required>
+                <option value="">Select Position </option>
+                <option value="developer">Devops-engineer</option>
+                <option value="designer">UI/UX Designer</option>
+                <option value="manager">Project Manager</option>
+                <option value="analyst">AI Engineer</option>
+            </select><br>
+            <span class="error" id="positionError">Please select a position</span><br>
+
+            <label for="experience">Years of Experience: </label><br>
+            <input type="text" id="experience" name="experience" required><br>
+
+            <label for="resume">Upload Resume (PDF only): </label><br>
+            <input type="file" id="resume" name="resume" accept=".pdf" required><br>
+            <span class="error" id="resumeError">Please upload a PDF resume</span><br>
+
+            <label for="coverLetter">Cover Letter: </label><br>
+            <textarea id="coverLetter" name="coverLetter" rows="4"></textarea><br><br>
+            <button type="submit">Submit Application</button>
+            <button type ="reset">Reset application</button>
+        </form>
+
+        <script>
+            const form = document.getElementById('jobForm');
+
+            function validateName(name) {
+                return name.trim().length >= 3;
+            }
+
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(String(email).toLowerCase());
+            }
+
+            function validatePhone(phone) {
+                const re = /^\d{10}$/;
+                return re.test(String(phone));
+            }
+
+            function validatePosition(position) {
+                return position !== "";
+            }
+
+            function showError(fieldId, show) {
+                const errorElement = document.getElementById(fieldId + 'Error');
+                if (show) {
+                    errorElement.classList.add('show');
+                } else {
+                    errorElement.classList.remove('show');
+                }
+            }
+
+            document.getElementById('name').addEventListener('blur', function() {
+                showError('name', !validateName(this.value));
+            });
+
+            document.getElementById('email').addEventListener('blur', function() {
+                showError('email', !validateEmail(this.value));
+            });
+
+            document.getElementById('phone').addEventListener('blur', function() {
+                showError('phone', !validatePhone(this.value));
+            });
+
+            document.getElementById('position').addEventListener('change', function() {
+                showError('position', !validatePosition(this.value));
+            });
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+                const position = document.getElementById('position').value;
+
+                let isValid = true;
+
+                if (!validateName(name)) {
+                    showError('name', true);
+                    isValid = false;
+                } else {
+                    showError('name', false);
+                }
+
+                if (!validateEmail(email)) {
+                    showError('email', true);
+                    isValid = false;
+                } else {
+                    showError('email', false);
+                }
+
+                if (!validatePhone(phone)) {
+                    showError('phone', true);
+                    isValid = false;
+                } else {
+                    showError('phone', false);
+                }
+
+                if (!validatePosition(position)) {
+                    showError('position', true);
+                    isValid = false;
+                } else {
+                    showError('position', false);
+                }
+
+                if (isValid) {
+                    alert('Application submitted successfully!');
+                    form.reset();
+                }
+            });
+            form.addEventListener('reset', function() {
+                setTimeout(() => {
+                    document.querySelectorAll('.error').forEach(error => {
+                        error.classList.remove('show');
+                    });
+                }, 0);
+            });
+        </script>
+    </body>
+</html>
